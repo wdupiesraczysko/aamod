@@ -3,6 +3,9 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: autoattack-mod
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -16,4 +19,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: autoattack-mod
-          path: build/libs/*.jar
+          path: autoattack-mod/build/libs/*.jar
