@@ -59,7 +59,7 @@ public class AutoAttackSettingsScreen extends Screen {
 
     @Override
     public void render(net.minecraft.client.gui.DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context);
+        super.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, height / 2 - 115, 0xFFFFFF);
 
         int cx = width / 2;
@@ -67,8 +67,6 @@ public class AutoAttackSettingsScreen extends Screen {
         context.drawTextWithShadow(textRenderer,
                 Text.literal("§7Min delay: " + AutoAttackMod.minDelay + " ticków  |  Max delay: " + AutoAttackMod.maxDelay + " ticków"),
                 cx - 110, sy + 118, 0xAAAAAA);
-
-        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
