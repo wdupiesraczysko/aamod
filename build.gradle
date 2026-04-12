@@ -1,31 +1,29 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
 }
 
-version = '1.0.0'
-group = 'com.autoattack'
+version = project.mod_version
+group = project.maven_group
 
 base {
-    archivesName = 'autoattack-mod'
+    archivesName = project.archives_base_name
 }
 
-repositories {
-    maven { url 'https://maven.fabricmc.net/' }
-}
+repositories {}
 
 dependencies {
-    minecraft 'com.mojang:minecraft:1.21.11'
-    mappings 'net.fabricmc:yarn:1.21.11+build.1:v2'
-    modImplementation 'net.fabricmc:fabric-loader:0.16.14'
-    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.141.3+1.21.11'
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 processResources {
-    inputs.property 'version', project.version
+    inputs.property "version", project.version
     filteringCharset 'UTF-8'
-    filesMatching('fabric.mod.json') {
-        expand 'version': project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 
