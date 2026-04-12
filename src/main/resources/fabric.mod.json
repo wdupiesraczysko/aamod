@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "autoattack",
+  "version": "1.0.0",
+  "name": "AutoAttack",
+  "description": "Automatycznie atakuje moba gdy najeżdżasz celownikiem. Toggle klawiszem R.",
+  "authors": ["custom"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.autoattack.mod.AutoAttackMod"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "fabric-api": "*",
+    "minecraft": "~1.20",
+    "java": ">=17"
+  }
+}
