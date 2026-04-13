@@ -21,17 +21,15 @@ public class AutoAttackSettingsScreen extends Screen {
         int startY = this.height / 2 - 90;
         int btnW = 220;
 
-        // Toggle aktywności
         addDrawableChild(ButtonWidget.builder(
                 getToggleText(),
                 btn -> {
-                    AutoAttackMod.isEnabled = !AutoAttackMod.isEnabled;
+                    AutoAttackMod.attackEnabled = !AutoAttackMod.attackEnabled;
                     btn.setMessage(getToggleText());
                 })
                 .dimensions(centerX - btnW / 2, startY, btnW, 20)
                 .build());
 
-        // Toggle atakowania graczy
         addDrawableChild(ButtonWidget.builder(
                 getPlayersText(),
                 btn -> {
@@ -41,19 +39,26 @@ public class AutoAttackSettingsScreen extends Screen {
                 .dimensions(centerX - btnW / 2, startY + 28, btnW, 20)
                 .build());
 
-        // Slider min delay
-        addDrawableChild(new DelaySlider(centerX - btnW / 2, startY + 62, btnW, 20,
+        addDrawableChild(ButtonWidget.builder(
+                getHitboxText(),
+                btn -> {
+                    AutoAttackMod.hitboxEnabled = !AutoAttackMod.hitboxEnabled;
+                    MinecraftClient.getInstance().getEntityRenderDispatcher().setRenderHitboxes(AutoAttackMod.hitboxEnabled);
+                    btn.setMessage(getHitboxText());
+                })
+                .dimensions(centerX - btnW / 2, startY + 56, btnW, 20)
+                .build());
+
+        addDrawableChild(new DelaySlider(centerX - btnW / 2, startY + 90, btnW, 20,
                 "Min delay", AutoAttackMod.minDelay, 2, 40, true));
 
-        // Slider max delay
-        addDrawableChild(new DelaySlider(centerX - btnW / 2, startY + 90, btnW, 20,
+        addDrawableChild(new DelaySlider(centerX - btnW / 2, startY + 118, btnW, 20,
                 "Max delay", AutoAttackMod.maxDelay, 2, 40, false));
 
-        // Powrót
         addDrawableChild(ButtonWidget.builder(
                 Text.literal("Zamknij"),
                 btn -> MinecraftClient.getInstance().setScreen(parent))
-                .dimensions(centerX - btnW / 2, startY + 130, btnW, 20)
+                .dimensions(centerX - btnW / 2, startY + 158, btnW, 20)
                 .build());
     }
 
@@ -66,7 +71,7 @@ public class AutoAttackSettingsScreen extends Screen {
         int sy = height / 2 - 90;
         context.drawTextWithShadow(textRenderer,
                 Text.literal("§7Min delay: " + AutoAttackMod.minDelay + " ticków  |  Max delay: " + AutoAttackMod.maxDelay + " ticków"),
-                cx - 110, sy + 118, 0xAAAAAA);
+                cx - 110, sy + 146, 0xAAAAAA);
     }
 
     @Override
@@ -78,14 +83,17 @@ public class AutoAttackSettingsScreen extends Screen {
     }
 
     private Text getToggleText() {
-        return Text.literal("AutoAttack: " + (AutoAttackMod.isEnabled ? "§aWŁĄCZONY" : "§cWYŁĄCZONY"));
+        return Text.literal("AutoAttack: " + (AutoAttackMod.attackEnabled ? "§aWŁĄCZONY" : "§cWYŁĄCZONY"));
     }
 
     private Text getPlayersText() {
         return Text.literal("Atakuj graczy: " + (AutoAttackMod.attackPlayers ? "§aWŁĄCZONE" : "§cWYŁĄCZONE"));
     }
 
-    // Slider do ustawiania opóźnienia
+    private Text getHitboxText() {
+        return Text.literal("Hitboxy przez ściany: " + (AutoAttackMod.hitboxEnabled ? "§aWŁĄCZONE" : "§cWYŁĄCZONE"));
+    }
+
     private static class DelaySlider extends SliderWidget {
         private final String label;
         private final int minVal;
