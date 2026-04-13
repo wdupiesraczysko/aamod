@@ -26,9 +26,11 @@ public class AutoAttackMod implements ClientModInitializer {
     public static final String MOD_ID = "autoattack";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    private static KeyBinding toggleKey;
+    private static KeyBinding toggleAttackKey;
+    private static KeyBinding toggleHitboxKey;
 
-    public static boolean isEnabled = false;
+    public static boolean attackEnabled = false;
+    public static boolean hitboxEnabled = false;
     public static boolean attackPlayers = false;
     public static int minDelay = 8;
     public static int maxDelay = 14;
@@ -40,10 +42,17 @@ public class AutoAttackMod implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("[AutoAttack] Mod załadowany!");
 
-        toggleKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.autoattack.toggle",
+        toggleAttackKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.autoattack.toggle_attack",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
+                "category.autoattack"
+        ));
+
+        toggleHitboxKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.autoattack.toggle_hitbox",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_H,
                 "category.autoattack"
         ));
 
@@ -56,13 +65,21 @@ public class AutoAttackMod implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.world == null) return;
 
-            while (toggleKey.wasPressed()) {
-                isEnabled = !isEnabled;
-                String status = isEnabled ? "§aWŁĄCZONY" : "§cWYŁĄCZONY";
+            while (toggleAttackKey.wasPressed()) {
+                attackEnabled = !attackEnabled;
+                String status = attackEnabled ? "§aWŁĄCZONY" : "§cWYŁĄCZONY";
                 client.player.sendMessage(Text.literal("§6[AutoAttack] §r" + status), true);
             }
 
-            if (!isEnabled) return;
+            while (toggleHitboxKey.wasPressed()) {
+                hitboxEnabled = !hitboxEnabled;
+                // Włącz/wyłącz wbudowane hitboxy Minecrafta
+                client.getEntityRenderDispatcher().setRenderHitboxes(hitboxEnabled);
+                String status = hitboxEnabled ? "§aWŁĄCZONE" : "§cWYŁĄCZONE";
+                client.player.sendMessage(Text.literal("§b[Hitboxy] §r" + status), true);
+            }
+
+            if (!attackEnabled) return;
 
             if (attackCooldown > 0) {
                 attackCooldown--;
@@ -79,7 +96,6 @@ public class AutoAttackMod implements ClientModInitializer {
 
             client.interactionManager.attackEntity(client.player, target);
             client.player.swingHand(Hand.MAIN_HAND);
-
             attackCooldown = minDelay + RANDOM.nextInt(Math.max(1, maxDelay - minDelay + 1));
         });
     }
